@@ -116,7 +116,7 @@ const RPREFIX = '^' .. PREFIX
 const COLOR_PROP_ID = 2000
 
 def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
-    const style = get(g:, 'supravim_colors_style', 'both')
+    const style = get(g:, 'prop_colors_style', 'both')
     if style == 'none' | return | endif
 
 	const current = getbufline(buffer, lnum)[0]
