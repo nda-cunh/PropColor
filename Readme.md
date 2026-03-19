@@ -1,49 +1,55 @@
 # 🎨 PropColor.vim
 
-Un plugin **Vim9script** ultra-rapide pour visualiser et modifier vos couleurs (Hex, 0x, RGB/RGBA) en temps réel, sans ralentir votre éditeur. 
+An ultra-fast **Vim9script** plugin to visualize and modify your colors (Hex, 0x, RGB/RGBA) in real-time, without slowing down your editor. 
 
-Contrairement aux anciens plugins basés sur la syntaxe, **PropColor** utilise les *Text Properties* de Vim 9, ce qui garantit une fluidité parfaite même sur de gros fichiers.
+Unlike older syntax-based plugins, **PropColor** leverages Vim 9's *Text Properties*, ensuring perfect fluidity even on large files.
+
+<img width="818" height="632" alt="image" src="https://github.com/user-attachments/assets/963cbdf9-37fe-417b-9a11-b1e16d4952cf" />
+
+And with color changing:
+
+<img width="900" height="512" alt="image" src="https://github.com/user-attachments/assets/463b5edb-38d9-45da-9266-c0da49f2a5fd" />
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-* 🚀 **Performance brute** : Écrit intégralement en Vim9script avec un rendu asynchrone par paquets (*chunks*).
-* 🌈 **Multi-formats** : Supporte `#RRGGBB`, `0xRRGGBB`, `rgb(...)` et `rgba(...)`.
-* 🖌️ **Styles personnalisables** : Affiche un indicateur (●), colore le texte, ou les deux.
-* 🛠️ **Sélecteur de couleur** : Intégration directe avec `zenity` pour modifier vos couleurs graphiquement.
-* 🔄 **Intelligent** : Se met à jour instantanément pendant la frappe grâce aux *listeners* de buffer.
+* 🚀 **Raw Performance**: Written entirely in Vim9script with asynchronous rendering by chunks.
+* 🌈 **Multi-format**: Supports `#RRGGBB`, `0xRRGGBB`, `rgb(...)` and `rgba(...)`.
+* 🖌️ **Customizable Styles**: Display a bullet indicator (●), color the text, or both.
+* 🛠️ **Color Picker**: Direct integration with `zenity` to modify your colors graphically.
+* 🔄 **Smart Update**: Updates instantly as you type thanks to buffer `listeners`.
 
 ---
 
 ## ⚙️ Configuration
 
-Vous pouvez choisir comment les couleurs s'affichent en définissant `g:prop_colors_style` dans votre `vimrc` :
+You can choose how colors are displayed by setting `g:prop_colors_style` in your `vimrc`:
 
-| Valeur | Description |
+| Value | Description |
 | :--- | :--- |
-| `'both'` | (Défaut) Affiche l'icône ● ET colore le texte |
-| `'icon'` | Affiche uniquement l'icône ● devant la couleur |
-| `'text'` | Colore uniquement le texte de la couleur |
-| `'none'` | Désactive l'affichage |
+| `'both'` | (Default) Displays the ● icon AND colors the text |
+| `'icon'` | Displays only the ● icon before the color |
+| `'text'` | Colors only the color hex/code text |
+| `'none'` | Disables display |
 
-**Exemple :**
+**Example:**
 ```vim
 g:prop_colors_style = 'icon'
 ```
 
 ---
 
-## ⌨️ Commandes
+## ⌨️ Commands
 
-| Commande | Action |
+| Command | Action |
 | :--- | :--- |
-| `:PropColorRefresh` | Force un scan complet du buffer actuel pour rafraîchir les couleurs. |
-| `:PropColorChange` | Ouvre le sélecteur de couleur (Zenity) pour modifier la couleur sous le curseur. |
+| `:PropColorRefresh` | Forces a full scan of the current buffer to refresh colors. |
+| `:PropColorChange` | Opens the color picker (Zenity) to modify the color under the cursor. |
 
 ---
 
-## 📋 Prérequis
+## 📋 Prerequisites
 
-* **Vim 9.0+** (compilé avec le support `+textprop`).
-* **Zenity** (optionnel, uniquement pour la commande `:PropColorChange`).
+* **Vim 9.0+** (compiled with `+textprop` support).
+* **Zenity** (optional, only for the `:PropColorChange` command).
