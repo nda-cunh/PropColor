@@ -38,6 +38,29 @@ You can choose how colors are displayed by setting `g:prop_colors_style` in your
 g:prop_colors_style = 'icon'
 ```
 
+### Add Custom Styles
+```vim
+# Example: Support for Vec4{X: 1.0, Y: 0.5, Z: 0.0, W: 1.0} format
+g:prop_colors_custom = [
+    {
+        pattern: '\vVec4\{X:\s*([0-9.]+),\s*Y:\s*([0-9.]+),\s*Z:\s*([0-9.]+)(,\s*W:\s*[0-9.]+)?\}',
+        extract: (m) => printf("#%02x%02x%02x%02x",
+            float2nr(str2float(m[1]) * 255), float2nr(str2float(m[2]) * 255), float2nr(str2float(m[3]) * 255), float2nr(str2float(m[4]) * 255)
+        ),
+        format: (r, g, b, a) => printf("Vec4{X: %.1f, Y: %.1f, Z: %.1f, W: %.1f}", r / 255.0, g / 255.0, b / 255.0, a / 255.0),
+        filetypes: ['c', 'cpp']
+    },
+]
+```
+
+### Disable a Style
+
+Actually i provide: 'hex', 'hexAlpha, 'rgb' and 'rgba' styles by default, but you can disable any of them:
+
+```vim
+g:prop_colors_disable = ['rgb', 'rgba']
+```
+
 ---
 
 ## ⌨️ Commands

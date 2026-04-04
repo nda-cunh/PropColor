@@ -80,6 +80,8 @@ def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
     const combined_pattern = Utils.GetCombinedPattern()
     
     var last_col = 0
+	const filetype = &filetype
+
     while true
         var res = matchstrpos(current, combined_pattern, last_col)
         if res[1] == -1 | break | endif
@@ -92,6 +94,11 @@ def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
         for extractor in Utils.GetAllExtractors()
             # IMPORTANT: matchlist permet de récupérer les groupes (X, Y, Z)
             var m = matchlist(raw_text, extractor.pattern)
+			# if the filetype of this buffer is bad, skip it
+			# if filetypes is [] , match all
+			if has_key(extractor, 'filetypes') && len(extractor.filetypes) > 0 && index(extractor.filetypes, filetype) == -1
+				continue
+			endif
             if !empty(m)
                 hex = extractor.extract(m)
                 break
