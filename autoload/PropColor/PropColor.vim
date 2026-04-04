@@ -51,12 +51,10 @@ export def ReinitColors()
 	RefreshAllColors()
 enddef
 
-
 var known_types: dict<bool> = {}
 const PREFIX = "inline_color_"
 const RPREFIX = '^' .. PREFIX
 const COLOR_PROP_ID = 2000
-
 
 def ProcessSingleLine(lnum: number, active_extractors: list<dict<any>>, buffer: number = bufnr('%'))
     const style = get(g:, 'prop_colors_style', 'both')

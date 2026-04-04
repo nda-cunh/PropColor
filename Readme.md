@@ -76,3 +76,39 @@ g:prop_colors_disable = ['rgb', 'rgba']
 
 * **Vim 9.0+** (compiled with `+textprop` support).
 * **Zenity** (optional, only for the `:PropColorChange` command).
+
+
+
+
+### If you need help for create your custom style look actual style:
+
+```vim
+    {
+		name: 'hex',
+        pattern: '\v#[0-9a-fA-F]{6}',
+        extract: (m) => m[0],
+        format: (r, g, b, a) => printf("#%02x%02x%02x", r, g, b),
+		filetypes: []
+    },
+    {
+		name: 'hexAlpha',
+        pattern: '\v0x[0-9a-fA-F]{6}',
+        extract: (m) => '#' .. m[0][2 :],
+        format: (r, g, b, a) => printf("0x%02x%02x%02x", r, g, b),
+		filetypes: []
+    },
+	{
+		name: 'rgb',
+        pattern: '\vrgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)',
+        extract: (m) => printf("#%02x%02x%02x", str2nr(m[1]), str2nr(m[2]), str2nr(m[3])),
+        format: (r, g, b, a) => printf("rgb(%d, %d, %d)", r, g, b),
+		filetypes: []
+    },
+	{
+		name: 'rgba',
+        pattern: '\vrgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[0-9.]+\s*)?\)',
+        extract: (m) => printf("#%02x%02x%02x", str2nr(m[1]), str2nr(m[2]), str2nr(m[3])),
+        format: (r, g, b, a) => printf("rgba(%d, %d, %d, %.1f)", r, g, b, a / 255.0),
+		filetypes: []
+    },
+```
