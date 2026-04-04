@@ -3,9 +3,16 @@ vim9script
 import autoload './Utils.vim' as Utils
 
 export def RefreshAllColors()
+	const buffer = bufnr('%')
+	const ft = getbufvar(buffer, '&filetype')
+	const active_extractors = Utils.GetExtractorsFor(ft)
+
+	const save_lazy = &lazyredraw
+	set lazyredraw
 	for i in range(1, line('$'))
-		ProcessSingleLine(i)
+		ProcessSingleLine(i, active_extractors, buffer)
 	endfor
+	&lazyredraw = save_lazy
 enddef
 
 export def InitColorListener()
@@ -21,28 +28,14 @@ export def InitColorListener()
 	const bufnr = bufnr('%')
 	const total_lines = line('$')
 
+	const ft = getbufvar(bufnr, '&filetype')
+	const active_extractors = Utils.GetExtractorsFor(ft)
+
     for lnum in range(1, total_lines)
-        ProcessSingleLine(lnum, bufnr)
+        ProcessSingleLine(lnum, active_extractors, bufnr)
     endfor
-	# ScanByChunks(bufnr, 1, total_lines, 500)
 enddef
 
-def ScanByChunks(buf: number, start_lnum: number, max_lnum: number, chunk_size: number)
-    if !bufexists(buf) | return | endif
-
-    var current = start_lnum
-    var end_idx = min([current + chunk_size - 1, max_lnum])
-
-    for lnum in range(current, end_idx)
-        ProcessSingleLine(lnum, buf)
-    endfor
-
-    if end_idx < max_lnum
-        timer_start(20, (_) => {
-            ScanByChunks(buf, end_idx + 1, max_lnum, chunk_size)
-        })
-    endif
-enddef
 
 #######################
 #  Private Functions  #
@@ -65,7 +58,7 @@ const RPREFIX = '^' .. PREFIX
 const COLOR_PROP_ID = 2000
 
 
-def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
+def ProcessSingleLine(lnum: number, active_extractors: list<dict<any>>, buffer: number = bufnr('%'))
     const style = get(g:, 'prop_colors_style', 'both')
     if style == 'none' | return | endif
 
@@ -80,8 +73,6 @@ def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
     const combined_pattern = Utils.GetCombinedPattern()
     
     var last_col = 0
-	const filetype = &filetype
-
     while true
         var res = matchstrpos(current, combined_pattern, last_col)
         if res[1] == -1 | break | endif
@@ -91,14 +82,8 @@ def ProcessSingleLine(lnum: number, buffer: number = bufnr('%'))
         var ends = res[2]
         var hex = ""
 
-        for extractor in Utils.GetAllExtractors()
-            # IMPORTANT: matchlist permet de récupérer les groupes (X, Y, Z)
+		for extractor in active_extractors
             var m = matchlist(raw_text, extractor.pattern)
-			# if the filetype of this buffer is bad, skip it
-			# if filetypes is [] , match all
-			if has_key(extractor, 'filetypes') && len(extractor.filetypes) > 0 && index(extractor.filetypes, filetype) == -1
-				continue
-			endif
             if !empty(m)
                 hex = extractor.extract(m)
                 break
@@ -150,10 +135,13 @@ enddef
 
 
 def ColorListener(buf: number, startline: number, endline: number, added: number, changes: list<any>)
-    var last_line = line('$')
+    const ft = getbufvar(buf, '&filetype')
+    const active_extractors = Utils.GetExtractorsFor(ft) 
+
+    const last_line = line('$')
     for lnum in range(startline, endline + added - 1)
         if lnum >= 1 && lnum <= last_line
-            ProcessSingleLine(lnum)
+            ProcessSingleLine(lnum, active_extractors, buf)
         endif
     endfor
 enddef

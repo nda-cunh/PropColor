@@ -58,3 +58,20 @@ export def GetCombinedPattern(): string
 	combined_pattern_cache = '\v(' .. regex_opti .. ')'
 	return combined_pattern_cache
 enddef
+
+var extractors_by_ft_cache: dict<list<dict<any>>> = {}
+
+export def GetExtractorsFor(filetype: string): list<dict<any>>
+    if has_key(extractors_by_ft_cache, filetype)
+        return extractors_by_ft_cache[filetype]
+    endif
+
+    var filtered = GetAllExtractors()->filter((_, ex) => {
+        return !has_key(ex, 'filetypes') 
+            || empty(ex.filetypes) 
+            || index(ex.filetypes, filetype) != -1
+    })
+
+    extractors_by_ft_cache[filetype] = filtered
+    return filtered
+enddef
