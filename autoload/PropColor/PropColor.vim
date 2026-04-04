@@ -93,6 +93,7 @@ def ProcessSingleLine(lnum: number, active_extractors: list<dict<any>>, buffer: 
 			if len(hex) > 7 && hex[0] == '#'
 				hex = hex[: 6]
 			endif
+			echom hex
 
             const col_tag = PREFIX .. hex[1 :]
             

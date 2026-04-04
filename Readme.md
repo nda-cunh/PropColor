@@ -90,13 +90,13 @@ g:prop_colors_disable = ['rgb', 'rgba']
         format: (r, g, b, a) => printf("#%02x%02x%02x", r, g, b),
 		filetypes: []
     },
-    {
+	{
 		name: 'hexAlpha',
-        pattern: '\v0x[0-9a-fA-F]{6}',
-        extract: (m) => '#' .. m[0][2 :],
-        format: (r, g, b, a) => printf("0x%02x%02x%02x", r, g, b),
+        pattern: '\v#[0-9a-fA-F]{8}',
+		extract: (m) => '#' .. m[0][2 :],
+		format: (r, g, b, a) => printf("0x%02x%02x%02x%02x", r, g, b, a),
 		filetypes: []
-    },
+	},
 	{
 		name: 'rgb',
         pattern: '\vrgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)',
@@ -106,7 +106,7 @@ g:prop_colors_disable = ['rgb', 'rgba']
     },
 	{
 		name: 'rgba',
-        pattern: '\vrgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[0-9.]+\s*)?\)',
+        pattern: '\vrgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[0-9.]+\s*)?\)',
         extract: (m) => printf("#%02x%02x%02x", str2nr(m[1]), str2nr(m[2]), str2nr(m[3])),
         format: (r, g, b, a) => printf("rgba(%d, %d, %d, %.1f)", r, g, b, a / 255.0),
 		filetypes: []
