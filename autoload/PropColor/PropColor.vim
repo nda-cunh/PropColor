@@ -31,11 +31,26 @@ export def InitColorListener()
 	const ft = getbufvar(bufnr, '&filetype')
 	const active_extractors = Utils.GetExtractorsFor(ft)
 
-    for lnum in range(1, total_lines)
-        ProcessSingleLine(lnum, active_extractors, bufnr)
-    endfor
+	ProcessChunk(1, active_extractors, bufnr)
 enddef
 
+def ProcessChunk(lnum: number, active_extractors: list<dict<any>>, buffer: number)
+    const chunk_size = 350
+    const last_line = line('$', buffer) 
+    
+    const chunk_end = min([lnum + chunk_size - 1, last_line])
+
+    for i in range(lnum, chunk_end)
+        ProcessSingleLine(i, active_extractors, buffer)
+    endfor
+
+    const next_start = chunk_end + 1
+    if next_start <= last_line
+        timer_start(10, (_) => {
+            ProcessChunk(next_start, active_extractors, buffer)
+        })
+    endif
+enddef
 
 #######################
 #  Private Functions  #
