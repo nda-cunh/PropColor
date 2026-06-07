@@ -25,29 +25,31 @@ export def InitColorListener()
         b:PropColor_Enabled = true
 	endif
 
-	const bufnr = bufnr('%')
+	const buffer = bufnr('%')
 	const total_lines = line('$')
 
-	const ft = getbufvar(bufnr, '&filetype')
+	const ft = getbufvar(buffer, '&filetype')
 	const active_extractors = Utils.GetExtractorsFor(ft)
 
-	ProcessChunk(1, active_extractors, bufnr)
+	ProcessChunk(1, total_lines, active_extractors, buffer)
 enddef
 
-def ProcessChunk(lnum: number, active_extractors: list<dict<any>>, buffer: number)
+
+def ProcessChunk(lnum: number, lmax: number, active_extractors: list<dict<any>>, buffer: number)
+    if !bufexists(buffer) | return | endif
+
     const chunk_size = 350
-    const last_line = line('$', buffer) 
-    
-    const chunk_end = min([lnum + chunk_size - 1, last_line])
+    const chunk_end = min([lnum + chunk_size - 1, lmax])
 
     for i in range(lnum, chunk_end)
         ProcessSingleLine(i, active_extractors, buffer)
     endfor
 
     const next_start = chunk_end + 1
-    if next_start <= last_line
+
+    if next_start <= lmax
         timer_start(10, (_) => {
-            ProcessChunk(next_start, active_extractors, buffer)
+            ProcessChunk(next_start, lmax, active_extractors, buffer)
         })
     endif
 enddef
