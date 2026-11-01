@@ -17,14 +17,14 @@ var default_extractors = [
 	},
 	{
 		name: 'rgb',
-        pattern: '\vrgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)',
+        pattern: '\v\Wrgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)',
         extract: (m) => printf("#%02x%02x%02x", str2nr(m[1]), str2nr(m[2]), str2nr(m[3])),
         format: (r, g, b, a) => printf("rgb(%d, %d, %d)", r, g, b),
 		filetypes: []
     },
 	{
 		name: 'rgba',
-        pattern: '\vrgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[0-9.]+\s*)?\)',
+        pattern: '\v\Wrgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[0-9.]+\s*)?\)',
         extract: (m) => printf("#%02x%02x%02x", str2nr(m[1]), str2nr(m[2]), str2nr(m[3])),
         format: (r, g, b, a) => printf("rgba(%d, %d, %d, %.1f)", r, g, b, a / 255.0),
 		filetypes: []
